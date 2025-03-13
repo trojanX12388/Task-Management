@@ -27,7 +27,7 @@ RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Create system user (with defined user and uid)
-RUN useradd -u ${uid} -m -s /bin/bash -g www-data ${user}
+# RUN useradd -u ${uid} -m -s /bin/bash -g www-data ${user}
 
 # Set correct permissions for the application
 COPY --chown=${user}:www-data . /var/www
