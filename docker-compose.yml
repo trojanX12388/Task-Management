@@ -4,7 +4,7 @@ services:
     # PHP-FPM Laravel Service
     laravel_eleven_app:
         build:
-            context: ./
+            context: ./ # Dockerfile in project root
             dockerfile: Dockerfile
             args:
                 user: laravel_eleven_app
