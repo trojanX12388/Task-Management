@@ -26,9 +26,6 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Create system user (with defined user and uid)
 RUN useradd -u ${uid} -m -s /bin/bash -g www-data ${user}
 
-# Set the working directory
-WORKDIR /var/www
-
 # Set correct permissions for the application
 COPY --chown=${user}:www-data . /var/www
 
@@ -36,5 +33,5 @@ USER ${user}
 
 EXPOSE 9000
 
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+CMD ["php-fpm"]
 
