@@ -4,6 +4,12 @@ FROM php:8.2.12-fpm
 ARG user=laravel
 ARG uid=1000
 
+# Ensure the www-data group exists
+RUN groupadd -g 33 www-data
+
+# Create laravel user if missing
+RUN useradd -u ${uid} -m -s /bin/bash -g www-data ${user}
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
