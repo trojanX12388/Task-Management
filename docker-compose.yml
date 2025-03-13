@@ -1,13 +1,14 @@
 version: '3'
 
 services:
+    # PHP-FPM Laravel Service
     laravel_eleven_app:
         build:
+            context: ./
+            dockerfile: Dockerfile
             args:
                 user: laravel_eleven_app
                 uid: 1000
-            context: ./
-            dockerfile: Dockerfile
         image: laravel_eleven_app_image
         container_name: laravel_eleven_app
         restart: unless-stopped
@@ -16,18 +17,22 @@ services:
             - ./:/var/www
         networks:
             - laravel_eleven_app_network
-    #nginx service
+
+    # Nginx Service
     laravel_eleven_app_webserver:
         image: nginx:alpine
         container_name: laravel_eleven_app_webserver_container
         restart: unless-stopped
         ports:
             - "6162:80"
+        volumes:
+            - ./:/var/www
+            - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - laravel_eleven_app
         networks:
             - laravel_eleven_app_network
 
 networks:
     laravel_eleven_app_network:
         driver: bridge
-        
-        

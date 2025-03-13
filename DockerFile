@@ -1,8 +1,8 @@
 FROM php:8.2.12-fpm
 
 # Arguments for user
-ARG user
-ARG uid
+ARG user=laravel
+ARG uid=1000
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -23,16 +23,14 @@ RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Create system user
-RUN useradd -u $uid -ms /bin/bash -g www-data $user
+# Create system user (with defined user and uid)
+RUN useradd -u ${uid} -m -s /bin/bash -g www-data ${user}
 
-COPY . /var/www
+# Set correct permissions for the application
+COPY --chown=${user}:www-data . /var/www
 
-COPY --chown=$user:www-data . /var/www
-
-USER $user
+USER ${user}
 
 EXPOSE 9000
 
-CMD [ "php-fpm" ]
-
+CMD ["php-fpm"]
