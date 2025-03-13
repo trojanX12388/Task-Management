@@ -24,7 +24,7 @@ services:
         container_name: laravel_eleven_app_webserver_container
         restart: unless-stopped
         ports:
-            - "6162:80"
+            - "9000:80" # Map 9000 to Nginx (not php-fpm)
         volumes:
             - ./:/var/www
             - ./nginx/default.conf:/etc/nginx/conf.d/default.conf

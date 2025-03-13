@@ -4,9 +4,6 @@ FROM php:8.2.12-fpm
 ARG user=laravel
 ARG uid=1000
 
-# Create laravel user if missing
-RUN useradd -u ${uid} -m -s /bin/bash -g www-data ${user}
-
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
@@ -27,14 +24,19 @@ RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Create system user (with defined user and uid)
-# RUN useradd -u ${uid} -m -s /bin/bash -g www-data ${user}
+RUN useradd -u ${uid} -m -s /bin/bash -g www-data ${user}
 
-# Set correct permissions for the application
-COPY --chown=${user}:www-data . /var/www
+# Set working directory
+WORKDIR /var/www
+
+# Copy Laravel app and set permissions
+COPY . /var/www
+RUN chown -R ${user}:www-data /var/www
 
 USER ${user}
 
-EXPOSE 9000
+# Expose ports for FPM and Nginx
+EXPOSE 9000 80
 
+# Start PHP-FPM
 CMD ["php-fpm"]
-
