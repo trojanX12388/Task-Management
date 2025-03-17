@@ -1,11 +1,11 @@
-version: '3'
+version: '3.8'
 
 services:
   # PHP-FPM Laravel Service
   laravel_eleven_app:
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: DockerFile
       args:
         user: laravel
         uid: 1000
@@ -16,7 +16,8 @@ services:
     volumes:
       - ./:/var/www
     ports:
-      - "80:80"    # Serve HTTP traffic on port 80
+      - "80:80"
+      - "9000:9000"  # Serve HTTP traffic on port 80
     networks:
       - laravel_eleven_app_network
 
